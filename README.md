@@ -21,4 +21,3 @@
         顺便加上个自己的pcb空板，可以全贴合K车惹。
         
         MCU V3.1.SchDoc
-        MCU V3.1_0 - 副本.PcbDoc
