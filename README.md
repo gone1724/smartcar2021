@@ -25,9 +25,7 @@
 [OPA4377四路 V2.0.SchDoc](https://github.com/gone1724/Smartcar_K/blob/main/OPA4377%E5%9B%9B%E8%B7%AF%20V2.0.SchDoc)
     
 #### 2021-3-22
-究极一体板方案！！！（bushi）
-
-这是最近尝试的一体板方案，包括全桥驱动芯片和四电感运放部分，希望不要出问题。
+究极一体板方案！（bushi）这是最近尝试的一体板方案，包括全桥驱动芯片和四电感运放部分，希望不要出问题。
     
 [MCU V3.1.SchDoc](https://github.com/gone1724/Smartcar_K/blob/main/MCU%20V3.1.SchDoc)
 
@@ -37,9 +35,7 @@ MCU V3.1的驱动部分，8V稳压好像只能到7.1V。
 [MCU V3.1.SchDoc](https://github.com/gone1724/Smartcar_K/blob/main/MCU%20V3.1.SchDoc)
 
 #### 2021-5-17
-把主板上稳压去掉了，用的之前的驱动板驱动，几个月了，稳的一批。
-
-2350运放，之前还能用，现在咋用不了了，气！
+把主板上稳压去掉了，用的之前的驱动板驱动，几个月了，稳的一批。不过我现在的2350运放又出问题了，之前还能用，现在咋用不了了，气！
 
 [MCU V3.1.SchDoc](https://github.com/gone1724/Smartcar_K/blob/main/MCU%20V3.1.SchDoc)
 
