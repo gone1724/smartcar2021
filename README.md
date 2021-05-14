@@ -32,7 +32,7 @@
 #### 2021-4-7
 MCU V3.1的驱动部分，8V稳压好像只能到7.1V。
 
-[MCU V3.1.SchDoc](https://github.com/gone1724/Smartcar_K/blob/main/MCU%20V3.1.SchDoc)
+[MCU V3.1.SchDoc](https://github.com/gone1724/Smartcar_K/blob/main/MCU%20V3.1.SchDoc )
 
 #### 2021-5-17
 把主板上稳压去掉了，用的之前的驱动板驱动，几个月了，稳的一批。不过我现在的2350运放又出问题了，之前还能用，现在咋用不了了，气！
@@ -43,4 +43,4 @@ MCU V3.1的驱动部分，8V稳压好像只能到7.1V。
 
 
 ***
-![My Car‘s Photos](https://raw.githubusercontent.com/gone1724/Smartcar_K/main/My%20Car%E2%80%98s%20Photos/IMG_20210408_161804.jpg)
+![My Car‘s Photos](https://raw.githubusercontent.com/gone1724/Smartcar_K/main/My%20Car%E2%80%98s%20Photos/IMG_20210408_161804.jpg "没加电磁的K车")
