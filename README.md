@@ -36,7 +36,7 @@ MCU V3.1的驱动部分，8V稳压好像只能到7.1V。
 [MCU V3.1.SchDoc](https://github.com/gone1724/Smartcar_K/blob/main/MCU%20V3.1.SchDoc)
 
 #### 2021-5-20
-运放没问题，是电磁杆焊的有问题。FPC好难焊得好啊。
+运放没问题，是电磁杆焊的有问题，FPC好难焊得好啊。
 
 
 ***
