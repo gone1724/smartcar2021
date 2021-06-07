@@ -2,7 +2,7 @@
 #include <math.h>
 float angle;
 float angle_origin=-20;
-float except_angle=0;//¸ºÊıÏò×ó¹Õ£¬ÕıÊıÏòÓÒ¹Õ
+float except_angle=0;//è´Ÿæ•°å‘å·¦æ‹ï¼Œæ­£æ•°å‘å³æ‹
 int icm_gyro_x_last;
 float acc_ratio = 1.6 ;//1.6        
 float gyro_ratio = 4.08;//4.08    
@@ -11,13 +11,12 @@ double send_to_PC[10];
 char tail[4] = {0x00, 0x00, 0x80, 0x7f};   
  uint16 adc_l,adc_r;
  uint16 position,last_position;
- float kp_a=-0.040;//Ä¿Ç°Õâ¸ö×éºÏ¿ÉÒÔ£¬PWMÖµÔÚ20msÄÚ²¨¶¯ÔÚ30ÉÏÏÂ
- float kd_a=-0.015;//ÊÔÁËÒ»ÏÂ£¬ËÙ¶È¸ø¹»¿ÉÒÔÉÏÆÂ£¬µ«ÊÇÏÂÆÂºó¾Íµ¹
+ float kp_a=-0.040;//ç›®å‰è¿™ä¸ªç»„åˆå¯ä»¥ï¼ŒPWMå€¼åœ¨20mså†…æ³¢åŠ¨åœ¨30ä¸Šä¸‹
+ float kd_a=-0.015;//è¯•äº†ä¸€ä¸‹ï¼Œé€Ÿåº¦ç»™å¤Ÿå¯ä»¥ä¸Šå¡ï¼Œä½†æ˜¯ä¸‹å¡åå°±å€’
 
  float now;
  int addnow=0;
  long intergral=0;
- int EX=0;
  double ki=0.00030;//0.0002;//0.00023;//0.00016;//0.000304;//0.00065;//0.009 low 0.01 high//0.012//0.010//0.0113//0.010//0.010
  double kp=0.0460;//0.073 ;//0.045 low 0.03 high//0.095//0.080//0.110//0.140//130
  double kd=-0.0046;//-0.007;//-0.01 low -0.01 high//0.009//0.011//0.008//0.0107//0.0103
@@ -25,10 +24,10 @@ char tail[4] = {0x00, 0x00, 0x80, 0x7f};
  double sum=0;
 
 /******/
-   float ki_m=0.565;//ÏÈµ÷i
-	 float kp_m=-0.040;//Ä¿Ç°Õâ¸ö×éºÏ¿ÉÒÔ£¬PWMÖµÔÚ20msÄÚ²¨¶¯ÔÚ30ÉÏÏÂ
-   float kd_m=-0.015;//ÊÔÁËÒ»ÏÂ£¬ËÙ¶È¸ø¹»¿ÉÒÔÉÏÆÂ£¬µ«ÊÇÏÂÆÂºó¾Íµ¹
-   int target=162;//158 Ö±ÅÜ;//·¶Î§110~300+
+   float ki_m=0.565;//å…ˆè°ƒi
+	 float kp_m=-0.040;//ç›®å‰è¿™ä¸ªç»„åˆå¯ä»¥ï¼ŒPWMå€¼åœ¨20mså†…æ³¢åŠ¨åœ¨30ä¸Šä¸‹
+   float kd_m=-0.015;//è¯•äº†ä¸€ä¸‹ï¼Œé€Ÿåº¦ç»™å¤Ÿå¯ä»¥ä¸Šå¡ï¼Œä½†æ˜¯ä¸‹å¡åå°±å€’
+   int target=162;//158 ç›´è·‘;//èŒƒå›´110~300+
 	 
    int temp_pluse = 0,temp_pluse_real = 0;
    int speed_bias=0,speed_last_bias=0,speed_previous_bias=0;
@@ -173,9 +172,9 @@ void get_encoder()
 			speed_previous_bias = speed_last_bias;
 	    speed_last_bias = speed_bias;
 	
-	    if(pwm_motor>840)	pwm_motor = 840;// ×î´óÏŞ·ù¼´Æô¶¯ËÙ¶È
+	    if(pwm_motor>840)	pwm_motor = 840;// æœ€å¤§é™å¹…å³å¯åŠ¨é€Ÿåº¦
 	    if(pwm_motor<500)	pwm_motor = 500;
-	    pwm_result = (int)pwm_motor;//500~2000 //760Ê±ÊÇ40×ª/ms,target=220
+	    pwm_result = (int)pwm_motor;//500~2000 //760æ—¶æ˜¯40è½¬/ms,target=220
 	
 			ctimer_count_clean(CTIM0_P34);
 			//oled_printf_float(80,0,temp_pluse,3,1);
@@ -198,7 +197,7 @@ int pid()
 void get_direction()
 {
 	if(temp_pluse>=20)
-	   pwm_duty(PWMB_CH3_P33, 159+pid());//pidÎªÕı×ó£¬¸ºÓÒ
+	   pwm_duty(PWMB_CH3_P33, 159+pid());//pidä¸ºæ­£å·¦ï¼Œè´Ÿå³
 	else 
 		 pwm_duty(PWMB_CH3_P33,159);
 }
@@ -234,8 +233,8 @@ float angle_calc(float angle_m, float gyro_m)
 }    
 void get_adc()
 {
-		adc_r = adc_once(ADC_P15, ADC_12BIT);	//ÓÒµç¸Ğ
-		adc_l = adc_once(ADC_P00, ADC_12BIT);	//×óµç¸Ğ
+		adc_r = adc_once(ADC_P15, ADC_12BIT);	//å³ç”µæ„Ÿ
+		adc_l = adc_once(ADC_P00, ADC_12BIT);	//å·¦ç”µæ„Ÿ
 	  position= ((adc_r - adc_l)<<7)/(adc_r+adc_l);
 	  except_angle=kp_a*position+kd_a*(last_position-position);
 }
@@ -247,8 +246,8 @@ void get_adc()
     oled_init();     
     icm20602_init_spi(); 
 	  pwm_init(PWMB_CH3_P33,50,159);
-	  //adc_init(ADC_P15, ADC_SYSclk_DIV_2);	//³õÊ¼»¯ADC,P1.2Í¨µÀ £¬ADCÊ±ÖÓÆµÂÊ£ºSYSclk/2
-	  //adc_init(ADC_P00, ADC_SYSclk_DIV_2);	//³õÊ¼»¯ADC,P1.1Í¨µÀ £¬ADCÊ±ÖÓÆµÂÊ£ºSYSclk/2
+	  //adc_init(ADC_P15, ADC_SYSclk_DIV_2);	//åˆå§‹åŒ–ADC,P1.2é€šé“ ï¼ŒADCæ—¶é’Ÿé¢‘ç‡ï¼šSYSclk/2
+	  //adc_init(ADC_P00, ADC_SYSclk_DIV_2);	//åˆå§‹åŒ–ADC,P1.1é€šé“ ï¼ŒADCæ—¶é’Ÿé¢‘ç‡ï¼šSYSclk/2
 	  ctimer_count_init(CTIM0_P34);
 	  seekfree_wireless_init();
 	  RTS_PIN = 0; //SEEKFREE_WIRELESS.h
@@ -290,9 +289,6 @@ void TM4_Isr() interrupt 20
 {
 	 FLAG_TM4++;
 	 if(FLAG_TM4==120) FLAG_TM4_COUNT++;
-	 if(FLAG_TM4_COUNT>=10&&FLAG_TM4_COUNT<=17) except_angle=EX;
-	 //if(FLAG_TM4_COUNT>=18) except_angle=0;
-	 //if(FLAG_TM4_COUNT>=8&&FLAG_TM4_COUNT>=16) except_angle=100;
 	 change_key();
 	 get_icm20602_accdata_spi();       
    get_icm20602_gyro_spi(); 	
@@ -301,7 +297,7 @@ void TM4_Isr() interrupt 20
 		 icm_gyro_x=icm_gyro_x_last;
 	 icm_gyro_x_last=icm_gyro_x;
 	 icm_acc_y+=0;
-   angle = angle_calc(icm_acc_y, -icm_gyro_x)+160;//×óÕıÓÒ¸º
+   angle = angle_calc(icm_acc_y, -icm_gyro_x)+160;//å·¦æ­£å³è´Ÿ
 	 //get_adc();
 	 get_direction();
 	 get_speed();
