@@ -9,10 +9,11 @@ float gyro_ratio = 4.08;//4.08
 float dt = 0.001; 
 double send_to_PC[10];
 char tail[4] = {0x00, 0x00, 0x80, 0x7f};   
+/******/
  uint16 adc_l,adc_r;
  uint16 position,last_position;
- float kp_a=-0.040;//目前这个组合可以，PWM值在20ms内波动在30上下
- float kd_a=-0.015;//试了一下，速度给够可以上坡，但是下坡后就倒
+ float kp_a=-0.040;
+ float kd_a=-0.015;
 
  float now;
  int addnow=0;
@@ -22,19 +23,15 @@ char tail[4] = {0x00, 0x00, 0x80, 0x7f};
  double kd=-0.0046;//-0.007;//-0.01 low -0.01 high//0.009//0.011//0.008//0.0107//0.0103
  int cnt=0;
  double sum=0;
-
 /******/
    float ki_m=0.565;//先调i
-	 float kp_m=-0.040;//目前这个组合可以，PWM值在20ms内波动在30上下
+   float kp_m=-0.040;//目前这个组合可以，PWM值在20ms内波动在30上下
    float kd_m=-0.015;//试了一下，速度给够可以上坡，但是下坡后就倒
-   int target=162;//158 直跑;//范围110~300+
-	 
+   int target=162;//158 直跑;//范围110~300+	 
    int temp_pluse = 0,temp_pluse_real = 0;
    int speed_bias=0,speed_last_bias=0,speed_previous_bias=0;
    int pwm_result;
-	 double pwm_motor;
-   int8 FLAG_TM4=0;
-	 int FLAG_TM4_COUNT;
+   double pwm_motor;
 /*******/
 int flag_turn=0;
 int16 fk_turn=1;
@@ -108,7 +105,8 @@ void change_key()
 			}
 			while(P45==0);
 		}
-	/* if(P46==0)
+/*
+	if(P46==0)
 	 {
 			fk_turn=(-1)*fk_turn;
 			flag_turn=0;
@@ -118,18 +116,20 @@ void change_key()
 			if(f52==-1)
 				P52=0;
 			while(P46==0);
-	 }*/
-/*	 oled_p6x8str(0,2,ch1);
+	 }
+*/
+/*
+         oled_p6x8str(0,2,ch1);
 	 oled_p6x8str(0,4,ch2);
 	 oled_p6x8str(0,6,ch3);
 	 oled_printf_float(20,2,kp,1,3);
 	 oled_printf_float(20,4,ki,1,5);
 	 oled_printf_float(20,6,kd,1,4);
-		*/
+*/
 }
 void FloatToByte(float floatNum,unsigned char* byteArry)//??????????2
 {
-		int i;
+    int i;
     char* pchar=(char*)&floatNum;
     for(i=0;i<sizeof(float);i++)
     {
@@ -156,50 +156,48 @@ void output_uart_wireless(float number)
 		unsigned char floatToHex[4];
 		FloatToByte(number,floatToHex);
 		for(i=3;i>=0;i--)
-			seekfree_wireless_send_buff(&floatToHex[i], 1);
+		seekfree_wireless_send_buff(&floatToHex[i], 1);
 }
 void get_encoder()
 {
-			temp_pluse_real = ctimer_count_read(CTIM0_P34);
-		if(FLAG_TM4%5==0) 
-		{
-			temp_pluse = temp_pluse_real;
-			speed_bias = target - temp_pluse; 
-	    //pwm_motor += kp_m*(speed_bias - speed_last_bias) + ki_m*speed_bias
-	    pwm_motor+= kp_m*(speed_bias-speed_last_bias)+ki_m*speed_bias;
-	    pwm_motor+= kd_m*(speed_bias-2*speed_last_bias-speed_previous_bias);
+	temp_pluse_real = ctimer_count_read(CTIM0_P34);
+	if(FLAG_TM4%5==0) 
+	{
+	temp_pluse = temp_pluse_real;
+	speed_bias = target - temp_pluse; 
+	//pwm_motor += kp_m*(speed_bias - speed_last_bias) + ki_m*speed_bias
+	pwm_motor+= kp_m*(speed_bias-speed_last_bias)+ki_m*speed_bias;
+        pwm_motor+= kd_m*(speed_bias-2*speed_last_bias-speed_previous_bias);
 	    
-			speed_previous_bias = speed_last_bias;
-	    speed_last_bias = speed_bias;
+	speed_previous_bias = speed_last_bias;
+	speed_last_bias = speed_bias;
 	
-	    if(pwm_motor>840)	pwm_motor = 840;// 最大限幅即启动速度
-	    if(pwm_motor<500)	pwm_motor = 500;
-	    pwm_result = (int)pwm_motor;//500~2000 //760时是40转/ms,target=220
+	if(pwm_motor>840)	pwm_motor = 840;// 最大限幅即启动速度
+        if(pwm_motor<500)	pwm_motor = 500;
+	pwm_result = (int)pwm_motor;//500~2000 //760时是40转/ms,target=220
 	
-			ctimer_count_clean(CTIM0_P34);
-			//oled_printf_float(80,0,temp_pluse,3,1);
-		}
+	ctimer_count_clean(CTIM0_P34);
+	//oled_printf_float(80,0,temp_pluse,3,1);
+	}
 }
 int pid()   
 {
 	int MAX=24;//??????<50,????
 	long IMAX=400000;
-  now=(angle+angle_origin+except_angle)*kp+icm_gyro_x*kd+intergral*ki;
+        now=(angle+angle_origin+except_angle)*kp+icm_gyro_x*kd+intergral*ki;
 	intergral+=(angle+angle_origin+except_angle);
 	if(intergral>IMAX) intergral=IMAX;
 	if(intergral<-IMAX) intergral=-IMAX;
 	
 	now=(int)now;
-  if(now<-MAX) return -MAX;
-  else if(now>MAX) return MAX; 
-  else return now;
+        if(now<-MAX) return -MAX;
+        else if(now>MAX) return MAX; 
+        else return now;
 }
 void get_direction()
 {
-	if(temp_pluse>=20)
-	   pwm_duty(PWMB_CH3_P33, 159+pid());//pid为正左，负右
-	else 
-		 pwm_duty(PWMB_CH3_P33,159);
+	if(temp_pluse>=20) pwm_duty(PWMB_CH3_P33, 159+pid());//pid为正左，负右
+	else pwm_duty(PWMB_CH3_P33,159);
 }
 void get_speed()
 {
@@ -225,7 +223,7 @@ float angle_calc(float angle_m, float gyro_m)
         first_angle = 1;    
         last_angle = angle_m;    
     }
-		gyro_now = gyro_m * gyro_ratio;            
+    gyro_now = gyro_m * gyro_ratio;            
     error_angle = (angle_m - last_angle)*acc_ratio;        
     temp_angle = last_angle + (error_angle + gyro_now)*dt;   
     last_angle = temp_angle;		     
@@ -233,18 +231,18 @@ float angle_calc(float angle_m, float gyro_m)
 }    
 void get_adc()
 {
-		adc_r = adc_once(ADC_P15, ADC_12BIT);	//右电感
-		adc_l = adc_once(ADC_P00, ADC_12BIT);	//左电感
+	  adc_r = adc_once(ADC_P15, ADC_12BIT);	//右电感
+	  adc_l = adc_once(ADC_P00, ADC_12BIT);	//左电感
 	  position= ((adc_r - adc_l)<<7)/(adc_r+adc_l);
 	  except_angle=kp_a*position+kd_a*(last_position-position);
 }
 	int main(void)    
 {                       
-    DisableGlobalIRQ();    
+          DisableGlobalIRQ();    
 	  board_init();
-    delay_ms(300);
-    oled_init();     
-    icm20602_init_spi(); 
+          delay_ms(300);
+          oled_init();     
+          icm20602_init_spi(); 
 	  pwm_init(PWMB_CH3_P33,50,159);
 	  //adc_init(ADC_P15, ADC_SYSclk_DIV_2);	//初始化ADC,P1.2通道 ，ADC时钟频率：SYSclk/2
 	  //adc_init(ADC_P00, ADC_SYSclk_DIV_2);	//初始化ADC,P1.1通道 ，ADC时钟频率：SYSclk/2
@@ -253,54 +251,52 @@ void get_adc()
 	  RTS_PIN = 0; //SEEKFREE_WIRELESS.h
 	  delay_ms(80);
 	  EnableGlobalIRQ();
-   	pwm_init(PWMA_CH1N_P11,10000,0);
+   	  pwm_init(PWMA_CH1N_P11,10000,0);
 	  pwm_init(PWMA_CH2N_P13,10000,0);
 	  //pit_timer_ms(TIM_3, 1);
 	  pit_timer_ms(TIM_4, 1);	
      while (1)
 { 
-	    //oled_printf_float(1,2,intergral,8,1);
+	 //oled_printf_float(1,2,intergral,8,1);
 	 oled_p6x8str(0,2,ch1);
 	 oled_p6x8str(0,4,ch2);
 	 oled_p6x8str(0,6,ch3);
 	 oled_printf_float(20,2,kp,1,3);
 	 oled_printf_float(20,4,ki,1,5);
 	 oled_printf_float(20,6,kd,1,4);
-			//send_to_PC[0]=pwm_result;
-			//send_to_PC[1]=kp_m*(speed_bias-speed_last_bias);
-			//send_to_PC[2]=ki_m*speed_bias;
-	    //send_to_PC[3]=kd_m*(speed_bias-2*speed_last_bias-speed_previous_bias);
+	
+	   //send_to_PC[0]=pwm_result;
+	   //send_to_PC[1]=kp_m*(speed_bias-speed_last_bias);
+	   //send_to_PC[2]=ki_m*speed_bias;
+           //send_to_PC[3]=kd_m*(speed_bias-2*speed_last_bias-speed_previous_bias);
 	
 	    send_to_PC[0]=(angle+angle_origin+except_angle)*kp;
 	    send_to_PC[1]=pid();    
 	    send_to_PC[2]=icm_gyro_x*kd;
 	    send_to_PC[3]=intergral*ki;
 	    //send_to_PC[0]=(angle+angle_origin)/100;
-			//send_to_PC[1]=icm_acc_y;
+	    //send_to_PC[1]=icm_acc_y;
 	    //send_to_PC[3]=-icm_gyro_x;
 			
-			output_uart_wireless(send_to_PC[0]);output_uart_wireless(send_to_PC[1]);
-			output_uart_wireless(send_to_PC[2]);output_uart_wireless(send_to_PC[3]);
-			seekfree_wireless_send_buff(tail,4);
-			delay_ms(5);
+	output_uart_wireless(send_to_PC[0]);output_uart_wireless(send_to_PC[1]);
+	output_uart_wireless(send_to_PC[2]);output_uart_wireless(send_to_PC[3]);
+	seekfree_wireless_send_buff(tail,4);
+	delay_ms(5);
     }     
 }
 void TM4_Isr() interrupt 20
 {
-	 FLAG_TM4++;
-	 if(FLAG_TM4==120) FLAG_TM4_COUNT++;
 	 change_key();
 	 get_icm20602_accdata_spi();       
-   get_icm20602_gyro_spi(); 	
-   icm_gyro_x+=18;
+         get_icm20602_gyro_spi(); 	
+         icm_gyro_x+=18;
 	 if(abs(icm_gyro_x-icm_gyro_x_last)>5000)
 		 icm_gyro_x=icm_gyro_x_last;
 	 icm_gyro_x_last=icm_gyro_x;
 	 icm_acc_y+=0;
-   angle = angle_calc(icm_acc_y, -icm_gyro_x)+160;//左正右负
-	 //get_adc();
+         angle = angle_calc(icm_acc_y, -icm_gyro_x)+160;//左正右负
+	 get_adc();
 	 get_direction();
 	 get_speed();
-	 if(FLAG_TM4==120) FLAG_TM4=0;
 	 TIM4_CLEAR_FLAG; 
 }
